@@ -1,7 +1,7 @@
 //
 // MDLAppDelegate.m
 //
-// Copyright (c) 2012-2013 shazino (shazino SAS), http://www.shazino.com/
+// Copyright (c) 2012-2014 shazino (shazino SAS), http://www.shazino.com/
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,30 +22,36 @@
 // THE SOFTWARE.
 
 #import "MDLAppDelegate.h"
-#import <MendeleySDK.h>
-#import "AFNetworkActivityIndicatorManager.h"
 
-NSString * const MDLConsumerKey    = @"##consumer_key##";
-NSString * const MDLConsumerSecret = @"##consumer_secret##";
-NSString * const MDLURLScheme      = @"mdl-mendeleysdkdemo";
+#import <MendeleySDK.h>
+#import <MDLMendeleyAPIClient.h>
+#import <AFNetworkActivityIndicatorManager.h>
+
+NSString * const MDLClientID     = @"##client_id##";
+NSString * const MDLClientSecret = @"##client_secret##";
+NSString * const MDLURLScheme    = @"mdl-mendeleysdkdemo";
 
 @implementation MDLAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.7 green:0 blue:0 alpha:1]];
-    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-    return YES;
-}
+    [MDLMendeleyAPIClient configureSharedClientWithClientID:MDLClientID
+                                                     secret:MDLClientSecret
+                                                redirectURI:MDLURLScheme];
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{   
-    if ([[url scheme] isEqualToString:MDLURLScheme])
-    {
-        NSNotification *notification = [NSNotification notificationWithName:kAFApplicationLaunchedWithURLNotification object:nil userInfo:[NSDictionary dictionaryWithObject:url forKey:kAFApplicationLaunchOptionsURLKey]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    UIColor *tintColor = [UIColor colorWithRed:0.7 green:0 blue:0 alpha:1];
+    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    if ([navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)]) {
+        [[UINavigationBar appearance] setBarTintColor:tintColor];
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
     }
-    
+    else {
+        [[UINavigationBar appearance] setTintColor:tintColor];
+    }
+
+    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+
     return YES;
 }
 
