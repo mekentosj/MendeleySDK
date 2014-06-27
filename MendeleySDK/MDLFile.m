@@ -38,7 +38,7 @@
     MDLFile *file = [MDLFile new];
     file.dateAdded = dateAdded;
     file.extension = extension;
-    file.hash      = hash;
+    file.fileHash  = hash;
     file.size      = size;
     file.document  = document;
     return file;
@@ -67,13 +67,13 @@
     else if (self.document.group) {
         resourcePath = [NSString stringWithFormat:@"/oapi/library/documents/%@/file/%@/%@/",
                         self.document.identifier,
-                        self.hash,
+                        self.fileHash,
                         self.document.group.identifier];
     }
     else {
         resourcePath = [NSString stringWithFormat:@"/oapi/library/documents/%@/file/%@//",
                         self.document.identifier,
-                        self.hash];
+                        self.fileHash];
     }
 
     return [client getPath:resourcePath
@@ -92,7 +92,7 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat: @"%@ (hash: %@; extension: %@; size: %@)",
-            [super description], self.hash, self.extension, self.size];
+            [super description], self.fileHash, self.extension, self.size];
 }
 
 @end

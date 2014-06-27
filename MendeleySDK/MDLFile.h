@@ -44,7 +44,7 @@
 /**
  The file hash.
  */
-@property (copy, nonatomic) NSString *hash;
+@property (copy, nonatomic) NSString *fileHash;
 
 /**
  The file size.
