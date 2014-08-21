@@ -42,11 +42,6 @@
 @property (copy, nonatomic) NSString *extension;
 
 /**
- The file hash.
- */
-@property (copy, nonatomic) NSString *hash;
-
-/**
  The file size.
  */
 @property (strong, nonatomic) NSNumber *size;

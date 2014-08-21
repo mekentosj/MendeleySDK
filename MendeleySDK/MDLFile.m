@@ -27,7 +27,25 @@
 #import "MDLDocument.h"
 #import "MDLGroup.h"
 
+@interface MDLFile ()
+@property (readwrite) NSString *hashCode;
+@end
+
 @implementation MDLFile
+
+- (instancetype)init
+{
+    @throw [NSException exceptionWithName:@"MDLInvalidInitException"
+                                   reason:@"Use +fileWithDateAdded:extension:hash:size:document: instead"
+                                 userInfo:nil];
+    return nil;
+}
+
+- (instancetype)initFile
+{
+    self = [super init];
+    return self;
+}
 
 + (instancetype)fileWithDateAdded:(NSDate *)dateAdded
                         extension:(NSString *)extension
@@ -35,10 +53,10 @@
                              size:(NSNumber *)size
                          document:(MDLDocument *)document
 {
-    MDLFile *file = [MDLFile new];
+    MDLFile *file = [[MDLFile alloc] initFile];
     file.dateAdded = dateAdded;
     file.extension = extension;
-    file.hash      = hash;
+    file.hashCode  = hash;
     file.size      = size;
     file.document  = document;
     return file;
@@ -67,13 +85,13 @@
     else if (self.document.group) {
         resourcePath = [NSString stringWithFormat:@"/oapi/library/documents/%@/file/%@/%@/",
                         self.document.identifier,
-                        self.hash,
+                        self.hashCode,
                         self.document.group.identifier];
     }
     else {
         resourcePath = [NSString stringWithFormat:@"/oapi/library/documents/%@/file/%@//",
                         self.document.identifier,
-                        self.hash];
+                        self.hashCode];
     }
 
     return [client getPath:resourcePath
@@ -92,7 +110,12 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat: @"%@ (hash: %@; extension: %@; size: %@)",
-            [super description], self.hash, self.extension, self.size];
+            [super description], self.hashCode, self.extension, self.size];
+}
+
+- (NSUInteger)hash
+{
+    return [self.hashCode hash];
 }
 
 @end
